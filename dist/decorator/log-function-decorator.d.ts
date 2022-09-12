@@ -5,5 +5,5 @@ interface IOptions {
     exception?: boolean;
     outputsNullSkip?: boolean;
 }
-export declare function logFunctionDecorator(logger: Logguy, options?: IOptions): (fn: Function) => (...args: any[]) => Function;
-export default logFunctionDecorator;
+export declare function logFunctionEnhance(logger: Logguy, options?: IOptions): (fn: Function) => (...args: any[]) => Function;
+export default logFunctionEnhance;

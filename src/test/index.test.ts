@@ -1,5 +1,5 @@
 import logFunctionDecorator from '../decorator/log-function-decorator';
-import logPropertyEnhance from '../decorator/class-log-decorator';
+import logPropertyEnhance from '../decorator/log-class-decorator';
 import Logguy from '../logguy';
 import { LogguyLevel } from '../interface';
 
@@ -43,10 +43,16 @@ const logData = {
 const errorData = new Error('error self');
 const logger = new Logguy({
   prefix: 'COMMON',
-  level: LogguyLevel.warn,
+  // level: LogguyLevel.warn,
+  ignoreLabels: { event: 'ignore' },
   time: true,
 });
+logger.debug('test debug string!!!');
 logger.debug('test debug data', logData);
+logger.debug(logData);
+logger.debug({ event: 'fire', method: 'notify' });
+logger.debug({ event: 'fire', method: 'notify' }, logData);
+logger.debug({ event: 'ignore', method: 'notify' }, { a: 111 });
 logger.info('test info data', logData);
 logger.warn('test warn data', logData);
 logger.error('test error data', errorData);

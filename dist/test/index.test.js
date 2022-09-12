@@ -10,14 +10,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const log_function_decorator_1 = __importDefault(require("../decorator/log-function-decorator"));
-const class_log_decorator_1 = __importDefault(require("../decorator/class-log-decorator"));
+const log_class_decorator_1 = __importDefault(require("../decorator/log-class-decorator"));
 const logguy_1 = __importDefault(require("../logguy"));
-const interface_1 = require("../interface");
 /**
  * class decorator.
  */
 const clogger = new logguy_1.default({ prefix: 'CLASS' });
-const logEnhance = (0, class_log_decorator_1.default)(clogger);
+const logEnhance = (0, log_class_decorator_1.default)(clogger);
 class TestClassLog {
     static test(a, b) {
         return 321;
@@ -36,6 +35,9 @@ const testFn = (c, d) => {
     return b;
 };
 (0, log_function_decorator_1.default)(flogger)(testFn)('a', 'b');
+/**
+ * normal log print.
+ */
 const logData = {
     name: 'box',
     age: 10,
@@ -48,10 +50,16 @@ const logData = {
 const errorData = new Error('error self');
 const logger = new logguy_1.default({
     prefix: 'COMMON',
-    level: interface_1.LogguyLevel.warn,
+    // level: LogguyLevel.warn,
+    ignoreLabels: { event: 'ignore' },
     time: true,
 });
+logger.debug('test debug string!!!');
 logger.debug('test debug data', logData);
+logger.debug(logData);
+logger.debug({ event: 'fire', method: 'notify' });
+logger.debug({ event: 'fire', method: 'notify' }, logData);
+logger.debug({ event: 'ignore', method: 'notify' }, { a: 111 });
 logger.info('test info data', logData);
 logger.warn('test warn data', logData);
 logger.error('test error data', errorData);

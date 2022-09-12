@@ -2,6 +2,9 @@ import {
   ILogguy,
   LogguyLevel,
   LogguySpecs,
+  LogguyData,
+  LogguyLabel,
+  IgnoreLogguyLabel,
 } from './interface';
 import {
   LEVEL_MAP,
@@ -35,6 +38,8 @@ export default class Logguy implements ILogguy {
    */
   private _timeMilliseconds: boolean;
 
+  private _ignoreLabels: IgnoreLogguyLabel;
+
   constructor(specs?: LogguySpecs) {
     // prefix.
     this._prefix = specs?.prefix ?? '';
@@ -47,6 +52,9 @@ export default class Logguy implements ILogguy {
 
     // time exact at milliseconds.
     this._timeMilliseconds = specs?.timeMilliseconds ?? false;
+
+    // ignore, when hit the lables.
+    this._ignoreLabels = specs?.ignoreLabels ?? {};
 
     // save log or not.
     this._isSave = specs?.isSave ?? false;
@@ -87,6 +95,16 @@ export default class Logguy implements ILogguy {
     this._print(LogguyLevel.error, ...args);
   }
 
+  _checkIfIgnore(labels: IgnoreLogguyLabel): boolean {
+    const keys = Object.keys(this._ignoreLabels);
+    if (keys.length === 0) {
+      return false;
+    }
+    const target = keys.find((k) => labels[k] && this._ignoreLabels[k].includes(labels[k]));
+
+    return Boolean(target);
+  }
+
   _validOutputLevel(currentLevel: LogguyLevel) {
     return currentLevel >= this._level;
   }
@@ -97,30 +115,52 @@ export default class Logguy implements ILogguy {
     let title;
     switch (args.length) {
       case 1:
-        [logData] = args;
-        title = '';
+        if (typeof args[0] === 'string') {
+          [title] = args;
+        } else {
+          [logData] = args;
+          title = '';
+        }
         break;
       case 2:
         [title, logData] = args;
         break;
     }
 
+    if (title && typeof title !== 'string') {
+      if (this._checkIfIgnore(title)) {
+        return;
+      }
+    }
+
     const prefix = this._prefix ?? '';
     const time = this._time ? getTime(this._timeMilliseconds) : null;
-    const formatTitle = this._assembleTitle(prefix, time, { level: LEVEL_MAP[level] }, title);
+
+    let formatTitle = '';
+    if (typeof title === 'string') {
+      formatTitle = this._assembleTitle(prefix, time, { level: LEVEL_MAP[level] }) + title;
+    } else {
+      formatTitle = this._assembleTitle(prefix, time, { level: LEVEL_MAP[level] }, title);
+    }
+    const printData = [
+      formatTitle,
+    ];
+    if (logData) {
+      printData.push(logData);
+    }
 
     switch(level){
       case LogguyLevel.debug:
-        console.debug(formatTitle, logData);
+        console.debug(...printData);
         break;
       case LogguyLevel.info:
-        console.info(formatTitle, logData);
+        console.info(...printData);
         break;
       case LogguyLevel.warn:
-        console.warn(formatTitle, logData);
+        console.warn(...printData);
         break;
       case LogguyLevel.error:
-        console.error(formatTitle, logData);
+        console.error(...printData);
         break;
     }
 

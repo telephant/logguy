@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logFunctionDecorator = void 0;
-function logFunctionDecorator(logger, options) {
+exports.logFunctionEnhance = void 0;
+function logFunctionEnhance(logger, options) {
     /**
      * @target target class object
      * @propertyKey key of member,that is part of the target
@@ -33,6 +33,6 @@ function logFunctionDecorator(logger, options) {
         };
     };
 }
-exports.logFunctionDecorator = logFunctionDecorator;
+exports.logFunctionEnhance = logFunctionEnhance;
 ;
-exports.default = logFunctionDecorator;
+exports.default = logFunctionEnhance;

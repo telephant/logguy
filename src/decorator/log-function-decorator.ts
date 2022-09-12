@@ -8,7 +8,7 @@ interface IOptions {
   outputsNullSkip?: boolean;
 }
 
-export function logFunctionDecorator(logger: Logguy, options?: IOptions) {
+export function logFunctionEnhance(logger: Logguy, options?: IOptions) {
   /**
    * @target target class object
    * @propertyKey key of member,that is part of the target
@@ -49,4 +49,4 @@ export function logFunctionDecorator(logger: Logguy, options?: IOptions) {
   };
 };
 
-export default logFunctionDecorator;
+export default logFunctionEnhance;

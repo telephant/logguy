@@ -8,7 +8,7 @@ interface IOptions {
   outputsNullSkip?: boolean;
 }
 
-export function logPropertyEnhance(log: Logguy) {
+export function logClassEnhance(log: Logguy) {
   const logger = log;
 
   return function (options?: IOptions) {
@@ -57,4 +57,4 @@ export function logPropertyEnhance(log: Logguy) {
   }
 };
 
-export default logPropertyEnhance;
+export default logClassEnhance;

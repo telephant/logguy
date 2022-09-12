@@ -6,7 +6,9 @@ export enum LogguyLevel {
   error = 5,
 }
 
-export type LogguyData = {};
+export type LogguyData = any;
+export type LogguyLabel = { [k: string]: number | string };
+export type IgnoreLogguyLabel = { [k: string]: any };
 
 export interface LogguySpecs {
   prefix?: string;
@@ -15,6 +17,8 @@ export interface LogguySpecs {
   time?: boolean;
   // exact at milliseconds.
   timeMilliseconds?: boolean;
+  // ignore labels, when type of label is IgnoreLogguyLabel.
+  ignoreLabels?: IgnoreLogguyLabel,
   // save the log data or not.
   isSave?: boolean;
   // method of saving log data.
@@ -22,20 +26,19 @@ export interface LogguySpecs {
 }
 
 export interface ILogguy {
+  debug(label: string): void;
   debug(data: LogguyData): void;
-  debug(title: string, data: LogguyData): void;
+  debug(label: string | LogguyLabel, data: LogguyData): void;
 
+  info(label: string): void;
   info(data: LogguyData): void;
-  info(title: string, data: LogguyData): void;
+  info(label: string | LogguyLabel, data: LogguyData): void;
 
+  warn(label: string): void;
   warn(data: LogguyData): void;
-  warn(title: string, data: LogguyData): void;
+  warn(label: string | LogguyLabel, data: LogguyData): void;
 
+  error(label: string): void;
   error(data: LogguyData): void;
-  error(title: string, data: LogguyData): void;
-
-  // collapsed(logObj: LogObj, prefix?: string): void;
-  // collapsed(labels: LogObj, logObj: LogObj, prefix?: string): void;
-  // info(data: LogObj): void;
-  // info(data: LogObj, stringify: boolean): void;
+  error(label: string | LogguyLabel, data: LogguyData): void;
 }

@@ -4,7 +4,7 @@ const interface_1 = require("./interface");
 const constant_1 = require("./constant");
 class Logguy {
     constructor(specs) {
-        var _a, _b, _c, _d, _e, _f;
+        var _a, _b, _c, _d, _e, _f, _g;
         // prefix.
         this._prefix = (_a = specs === null || specs === void 0 ? void 0 : specs.prefix) !== null && _a !== void 0 ? _a : '';
         // default log level is 'debug', the lowest one.
@@ -13,10 +13,12 @@ class Logguy {
         this._time = (_c = specs === null || specs === void 0 ? void 0 : specs.time) !== null && _c !== void 0 ? _c : false;
         // time exact at milliseconds.
         this._timeMilliseconds = (_d = specs === null || specs === void 0 ? void 0 : specs.timeMilliseconds) !== null && _d !== void 0 ? _d : false;
+        // ignore, when hit the lables.
+        this._ignoreLabels = (_e = specs === null || specs === void 0 ? void 0 : specs.ignoreLabels) !== null && _e !== void 0 ? _e : {};
         // save log or not.
-        this._isSave = (_e = specs === null || specs === void 0 ? void 0 : specs.isSave) !== null && _e !== void 0 ? _e : false;
+        this._isSave = (_f = specs === null || specs === void 0 ? void 0 : specs.isSave) !== null && _f !== void 0 ? _f : false;
         // method for saving.
-        this._saveMethod = (_f = specs === null || specs === void 0 ? void 0 : specs.saveMethod) !== null && _f !== void 0 ? _f : null;
+        this._saveMethod = (_g = specs === null || specs === void 0 ? void 0 : specs.saveMethod) !== null && _g !== void 0 ? _g : null;
     }
     debug(...args) {
         if (!this._validOutputLevel(interface_1.LogguyLevel.debug)) {
@@ -42,6 +44,14 @@ class Logguy {
         }
         this._print(interface_1.LogguyLevel.error, ...args);
     }
+    _checkIfIgnore(labels) {
+        const keys = Object.keys(this._ignoreLabels);
+        if (keys.length === 0) {
+            return false;
+        }
+        const target = keys.find((k) => labels[k] && this._ignoreLabels[k].includes(labels[k]));
+        return Boolean(target);
+    }
     _validOutputLevel(currentLevel) {
         return currentLevel >= this._level;
     }
@@ -51,28 +61,50 @@ class Logguy {
         let title;
         switch (args.length) {
             case 1:
-                [logData] = args;
-                title = '';
+                if (typeof args[0] === 'string') {
+                    [title] = args;
+                }
+                else {
+                    [logData] = args;
+                    title = '';
+                }
                 break;
             case 2:
                 [title, logData] = args;
                 break;
         }
+        if (title && typeof title !== 'string') {
+            if (this._checkIfIgnore(title)) {
+                return;
+            }
+        }
         const prefix = (_a = this._prefix) !== null && _a !== void 0 ? _a : '';
         const time = this._time ? getTime(this._timeMilliseconds) : null;
-        const formatTitle = this._assembleTitle(prefix, time, { level: constant_1.LEVEL_MAP[level] }, title);
+        let formatTitle = '';
+        if (typeof title === 'string') {
+            formatTitle = this._assembleTitle(prefix, time, { level: constant_1.LEVEL_MAP[level] }) + title;
+        }
+        else {
+            formatTitle = this._assembleTitle(prefix, time, { level: constant_1.LEVEL_MAP[level] }, title);
+        }
+        const printData = [
+            formatTitle,
+        ];
+        if (logData) {
+            printData.push(logData);
+        }
         switch (level) {
             case interface_1.LogguyLevel.debug:
-                console.debug(formatTitle, logData);
+                console.debug(...printData);
                 break;
             case interface_1.LogguyLevel.info:
-                console.info(formatTitle, logData);
+                console.info(...printData);
                 break;
             case interface_1.LogguyLevel.warn:
-                console.warn(formatTitle, logData);
+                console.warn(...printData);
                 break;
             case interface_1.LogguyLevel.error:
-                console.error(formatTitle, logData);
+                console.error(...printData);
                 break;
         }
         if (this._isSave && this._saveMethod) {
