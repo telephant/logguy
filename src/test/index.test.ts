@@ -24,7 +24,7 @@ TestClassLog.test('aaa', 2222);
 const flogger = new Logguy({ prefix: 'FUNCTION' });
 const testFn = (c: string, d: string) => {
   const b = 1;
-return b;
+  return b;
 };
 logFunctionDecorator(flogger)(testFn)('a', 'b');
 
