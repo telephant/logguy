@@ -7,7 +7,9 @@ export enum LogguyLevel {
 }
 
 export type LogguyData = any;
+
 export type LogguyLabel = { [k: string]: number | string };
+
 export type IgnoreLogguyLabel = { [k: string]: any };
 
 export interface LogguySpecs {

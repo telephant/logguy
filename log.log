@@ -1,0 +1,8 @@
+[SAVE][2022-8-1 18:12:55][LEVEL: ERROR]save log error:Errorerror messError: error mess
+    at Object.<anonymous> (/Users/telephant/self/logguy/dist/test/index.test.js:112:33)
+    at Module._compile (node:internal/modules/cjs/loader:1103:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1157:10)
+    at Module.load (node:internal/modules/cjs/loader:981:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:77:12)
+    at node:internal/main/run_main_module:17:47

@@ -1,7 +1,7 @@
 import logFunctionDecorator from '../decorator/log-function-decorator';
 import logPropertyEnhance from '../decorator/log-class-decorator';
 import Logguy from '../logguy';
-import { LogguyLevel } from '../interface';
+import * as fs from 'node:fs/promises';
 
 
 /**
@@ -56,3 +56,26 @@ logger.debug({ event: 'ignore', method: 'notify' }, { a: 111 });
 logger.info('test info data', logData);
 logger.warn('test warn data', logData);
 logger.error('test error data', errorData);
+
+/**
+ * test save.
+ */
+const saveMethod = (title: any, data: any) => {
+  console.log('🚀 ===== saveMethod ===== data', data);
+  let dataStr = data;
+  if (data instanceof Error) {
+    dataStr = data.name + data.message + data.stack;
+  } else if (typeof data === 'object') {
+    dataStr = JSON.stringify(data);
+  }
+  fs.writeFile('log.log', title + ':' + dataStr);
+};
+const slogger = new Logguy({
+  prefix: 'SAVE',
+  ignoreLabels: { event: 'ignore' },
+  time: true,
+  isSave: true,
+  saveMethod,
+});
+// slogger.info('save log 111', { a: { b: 3213 } });
+slogger.error('save log error', new Error('error mess'));
