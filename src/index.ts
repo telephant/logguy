@@ -4,10 +4,8 @@ import Logguy from './logguy';
 export * from './constant';
 export * from './interface';
 
-const modules = {
-  Logguy,
+export default Logguy;
+export {
   LogFuncEnhance,
   LogClassEnhance,
 };
-
-export default modules;
