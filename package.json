@@ -2,7 +2,7 @@
   "name": "logguy",
   "version": "0.0.1",
   "description": "enhance logger, support log level, format log, store log, log decorator and etc.",
-  "main": "/dist/index.js",
+  "main": "/lib/index.js",
   "scripts": {
     "test": "tsc --project ./tsconfig.json && node ./dist/test/index.test.js",
     "build": "rollup --config"
