@@ -1,9 +1,8 @@
 export enum LogguyLevel {
   debug = 1,
-  log = 2,
-  info = 3,
-  warn = 4,
-  error = 5,
+  info = 2,
+  warn = 3,
+  error = 4,
 }
 
 export type LogguyData = any;

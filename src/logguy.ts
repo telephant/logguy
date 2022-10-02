@@ -3,7 +3,6 @@ import {
   LogguyLevel,
   LogguySpecs,
   LogguyData,
-  LogguyLabel,
   IgnoreLogguyLabel,
 } from './interface';
 import {
@@ -64,34 +63,18 @@ export default class Logguy implements ILogguy {
   }
 
   debug(...args: any[]) {
-    if (!this._validOutputLevel(LogguyLevel.debug)) {
-      return;
-    }
-
     this._print(LogguyLevel.debug, ...args);
   }
 
   info(...args: any[]) {
-    if (!this._validOutputLevel(LogguyLevel.info)) {
-      return;
-    }
-
     this._print(LogguyLevel.info, ...args);
   }
 
   warn(...args: any[]) {
-    if (!this._validOutputLevel(LogguyLevel.warn)) {
-      return;
-    }
-
     this._print(LogguyLevel.warn, ...args);
   }
 
   error(...args: any[]) {
-    if (!this._validOutputLevel(LogguyLevel.error)) {
-      return;
-    }
-
     this._print(LogguyLevel.error, ...args);
   }
 
@@ -145,23 +128,27 @@ export default class Logguy implements ILogguy {
     const printData = [
       formatTitle,
     ];
-    if (logData) {
-      printData.push(logData);
-    }
 
-    switch(level){
-      case LogguyLevel.debug:
-        console.debug(...printData);
-        break;
-      case LogguyLevel.info:
-        console.info(...printData);
-        break;
-      case LogguyLevel.warn:
-        console.warn(...printData);
-        break;
-      case LogguyLevel.error:
-        console.error(...printData);
-        break;
+    // control log level print immediately..
+    if (this._validOutputLevel(level)) {
+      if (logData) {
+        printData.push(logData);
+      }
+
+      switch (level) {
+        case LogguyLevel.debug:
+          console.debug(...printData);
+          break;
+        case LogguyLevel.info:
+          console.info(...printData);
+          break;
+        case LogguyLevel.warn:
+          console.warn(...printData);
+          break;
+        case LogguyLevel.error:
+          console.error(...printData);
+          break;
+      }
     }
 
     if (this._isSave && this._saveMethod) {
